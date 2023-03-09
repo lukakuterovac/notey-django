@@ -1,0 +1,15 @@
+.feature-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+}
+
+.icon-link > .bi {
+  margin-top: 0.125rem;
+  margin-left: 0.125rem;
+  fill: currentcolor;
+  transition: transform 0.25s ease-in-out;
+}
+.icon-link:hover > .bi {
+  transform: translate(0.25rem);
+}
