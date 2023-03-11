@@ -87,7 +87,6 @@
         />
       </symbol>
     </svg>
-
     <div class="w-100 h-100 d-flex flex-column">
       <div class="sticky-top navbar navbar-expand-lg navbar bg-dark-subtle">
         <div class="container-fluid">
@@ -120,10 +119,29 @@
                   href="#"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
-                  >Account</a
                 >
+                  {% if user.is_authenticated %} {{ user.username }} {% else %}
+                  Account {% endif %}
+                </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="">Login</a></li>
+                  {% if user.is_authenticated %}
+                  <li>
+                    <a class="dropdown-item" href="{% url 'app:logout' %}">
+                      Logout
+                    </a>
+                  </li>
+                  {% else %}
+                  <li>
+                    <a class="dropdown-item" href="{% url 'app:login' %}">
+                      Login
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'app:register' %}">
+                      Register
+                    </a>
+                  </li>
+                  {% endif %}
                 </ul>
               </li>
             </ul>
