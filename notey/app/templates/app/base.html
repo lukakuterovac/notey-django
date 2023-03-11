@@ -90,8 +90,11 @@
     <div class="w-100 h-100 d-flex flex-column">
       <div class="sticky-top navbar navbar-expand-lg navbar bg-dark-subtle">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'app:home' %}">
-            <img src="" />
+          <a
+            class="navbar-brand d-flex justify-content-center"
+            href="{% url 'app:home' %}"
+          >
+            <img src="{% static 'app/image/logo.png' %}" style="height: 32px" />
             Notey
           </a>
           <button
