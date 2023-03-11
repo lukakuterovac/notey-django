@@ -1,5 +1,5 @@
 {% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
-<div class="container py-5">
+<div class="container py-5 col col-md-6 col-lg-4">
   <h1>Login</h1>
   <form method="POST">
     {% csrf_token %} {{ login_form|crispy }}

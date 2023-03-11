@@ -13,3 +13,7 @@
 .icon-link:hover > .bi {
   transform: translate(0.25rem);
 }
+
+.asteriskField {
+  display: none !important;
+}
