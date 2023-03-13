@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms import ModelForm
+
+from .models import Project
 
 
 class NewUserForm(UserCreationForm):
@@ -16,3 +19,10 @@ class NewUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class NewProjectForm(ModelForm):
+    class Meta:
+        model = Project
+        fields = ["name"]
+        exclude = ["creator"]

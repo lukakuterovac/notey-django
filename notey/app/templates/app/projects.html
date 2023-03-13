@@ -1,0 +1,9 @@
+{% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
+<div class="container">
+  <h1>Projects</h1>
+  {% for project in projects %}
+  <p>{{ project.project.name }}</p>
+  {% endfor %}
+  <a href="{% url 'app:new_project' %}">New project</a>
+</div>
+{% endblock %}

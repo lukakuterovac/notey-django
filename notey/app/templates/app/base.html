@@ -21,6 +21,13 @@
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
+
+    <!-- HTMX -->
+    <script
+      src="https://unpkg.com/htmx.org@1.8.6"
+      integrity="sha384-Bj8qm/6B+71E6FQSySofJOUjA/gq330vEqjFx9LakWybUySyI1IQHwPtbTU7bNwx"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body class="h-100">
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
@@ -114,6 +121,11 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'app:home' %}">Home</a>
               </li>
+              {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:projects' %}">Projects</a>
+              </li>
+              {% endif %}
             </ul>
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item dropdown">
@@ -127,7 +139,13 @@
                   Account {% endif %}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  {% if user.is_authenticated %}
+                  {% if user.is_authenticated %} {% if user.is_superuser %}
+                  <li>
+                    <a class="dropdown-item" href="{% url 'admin:index' %}">
+                      Admin Dashboard
+                    </a>
+                  </li>
+                  {% endif %}
                   <li>
                     <a class="dropdown-item" href="{% url 'app:logout' %}">
                       Logout

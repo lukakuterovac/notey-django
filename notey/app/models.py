@@ -7,3 +7,34 @@ class Profile(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user.username}'s profile"
+
+
+class Project(models.Model):
+    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=128, unique=True)
+
+    def __str__(self) -> str:
+        return f"[{self.creator.username}]{self.name}"
+
+
+class ProjectUser(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="user",
+    )
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="project",
+    )
+
+    class Meta:
+        unique_together = ("user", "project")
+
+    def __str__(self) -> str:
+        return f"{self.user.username}-{self.project.name}"
+
+    def getProjects(user):
+        projects = ProjectUser.objects.all().filter(user=user)
+        return projects
