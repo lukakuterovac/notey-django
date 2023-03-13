@@ -10,6 +10,7 @@
   fill: currentcolor;
   transition: transform 0.25s ease-in-out;
 }
+
 .icon-link:hover > .bi {
   transform: translate(0.25rem);
 }

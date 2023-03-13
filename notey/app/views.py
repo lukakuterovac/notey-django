@@ -93,3 +93,11 @@ def new_project(request):
         "form": form,
     }
     return render(request, "app/new_project.html", context)
+
+
+def project_details(request, project_id):
+    project = Project.objects.get(pk=project_id)
+    context = {
+        "project": project,
+    }
+    return render(request, "app/project_details.html", context)

@@ -36,5 +36,8 @@ class ProjectUser(models.Model):
         return f"{self.user.username}-{self.project.name}"
 
     def getProjects(user):
-        projects = ProjectUser.objects.all().filter(user=user)
+        projectUser = ProjectUser.objects.all().filter(user=user)
+        projects = []
+        for el in projectUser:
+            projects.append(el.project)
         return projects
