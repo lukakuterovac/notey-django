@@ -84,15 +84,20 @@ def new_project(request):
                 user=user,
             )
             proj_user.save()
+            form_errors = True
             return HttpResponseRedirect(reverse("app:projects"))
+        else:
+            form_errors = False
     else:
         form = NewProjectForm()
     projects = ProjectUser.getProjects(user=user)
+    form_errors = True
     context = {
         "projects": projects,
         "form": form,
+        "form_errors": form_errors,
     }
-    return render(request, "app/new_project.html", context)
+    return render(request, "app/projects.html", context)
 
 
 def project_details(request, project_id):

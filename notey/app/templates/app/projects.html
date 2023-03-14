@@ -8,6 +8,55 @@
     </a>
     {% endfor %}
   </div>
-  <a href="{% url 'app:new_project' %}">New project</a>
+  <!-- Button trigger modal -->
+  <button
+    id="modal-toggle"
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
+  >
+    Create a new project
+  </button>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Create a new project
+          </h1>
+          <a href="{% url 'app:projects' %}" class="btn-close"></a>
+        </div>
+        <form action="{% url 'app:new_project' %}" method="post">
+          {% csrf_token %}
+          <div class="modal-body">{{ form|crispy }}</div>
+          <div class="modal-footer">
+            <a class="btn btn-secondary" href="{% url 'app:projects' %}">
+              Close
+            </a>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+  window.onload = function () {
+    var error = "{{ form_errors }}";
+
+    if (error == "True") {
+      document.getElementById("modal-toggle").click();
+    }
+  };
+</script>
 {% endblock %}
