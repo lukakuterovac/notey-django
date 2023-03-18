@@ -9,17 +9,20 @@
           class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
         >
           <svg class="bi" width="1em" height="1em">
-            <use xlink:href="#dice-1" />
+            <use xlink:href="#view-list" />
           </svg>
         </div>
-        <h3 class="fs-2">Feature #1</h3>
+        <h3 class="fs-2">Projects</h3>
         <p>
           Feature description... Lorem ipsum dolor sit amet consectetur
           adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing
           elit.
         </p>
-        <a href="#" class="icon-link d-inline-flex align-items-center">
-          Call to action
+        <a
+          href="{% url 'app:projects' %}"
+          class="icon-link d-inline-flex align-items-center"
+        >
+          Go to projects
           <svg class="bi" width="1em" height="1em">
             <use xlink:href="#chevron-right" />
           </svg>

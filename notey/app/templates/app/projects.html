@@ -1,23 +1,55 @@
 {% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
-<div class="container">
+<div
+  class="container d-flex flex-column align-items-center justify-content-center"
+>
   <h1>Projects</h1>
-  <div>
-    {% for project in projects %}
-    <a href="{% url 'app:project_details' project.id %}">
-      {{ project.name }}
+  <div
+    class="mb-2 d-flex flex-row flex-wrap align-items-center justify-content-center"
+  >
+    <a
+      href=""
+      id="modal-toggle"
+      class="text-decoration-none text-white"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal"
+    >
+      <div class="card me-2 mb-2 d-inline-block" style="width: 18rem">
+        <img
+          src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1988&q=80"
+          class="card-img-top"
+          style="height: 12rem; object-fit: cover"
+        />
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi bi-plus-circle me-1"></i>Create a new project
+          </h5>
+        </div>
+      </div>
     </a>
+    {% for project in projects %}
+    <a
+      href="{% url 'app:project_details' project.id %}"
+      class="text-decoration-none text-white"
+    >
+      <div class="card me-2 mb-2 d-inline-block" style="width: 18rem">
+        <img
+          src="https://images.unsplash.com/photo-1518976024611-28bf4b48222e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fG5vdGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=900&q=60"
+          class="card-img-top"
+          style="height: 12rem; object-fit: cover"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ project.name }}</h5>
+        </div>
+      </div>
+    </a>
+    <!-- <a
+      href="{% url 'app:project_details' project.id %}"
+      class="btn btn-secondary"
+    >
+      {{ project.name }}
+    </a> -->
     {% endfor %}
   </div>
-  <!-- Button trigger modal -->
-  <button
-    id="modal-toggle"
-    type="button"
-    class="btn btn-primary"
-    data-bs-toggle="modal"
-    data-bs-target="#exampleModal"
-  >
-    Create a new project
-  </button>
 
   <!-- Modal -->
   <div
