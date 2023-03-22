@@ -4,8 +4,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import HttpResponseRedirect, redirect, render
 from django.urls import reverse
 
-from .forms import NewProjectForm, NewUserForm
-from .models import Project, ProjectUser
+from .forms import NewProjectForm, NewUserForm, NewNoteForm
+from .models import Project, ProjectUser, Note
 
 
 def home(request):
@@ -102,7 +102,38 @@ def new_project(request):
 
 def project_details(request, project_id):
     project = Project.objects.get(pk=project_id)
+    notes = project.get_notes()
+    note_form = NewNoteForm()
     context = {
         "project": project,
+        "notes": notes,
+        "form": note_form,
+    }
+    return render(request, "app/project_details.html", context)
+
+
+def new_note(request, project_id):
+    user = request.user
+    project = Project.objects.get(pk=project_id)
+    if request.method == "POST":
+        form = NewNoteForm(request.POST)
+        if form.is_valid():
+            note = Note(
+                text=form.cleaned_data["text"],
+                user=user,
+                project=project,
+                is_completed=False,
+            )
+            note.save()
+            return HttpResponseRedirect(
+                reverse("app:project_details", args=[project_id])
+            )
+    else:
+        form = NewNoteForm()
+
+    notes = project.get_notes()
+    context = {
+        "project": project,
+        "notes": notes,
     }
     return render(request, "app/project_details.html", context)

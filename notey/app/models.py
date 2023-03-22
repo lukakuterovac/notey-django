@@ -16,6 +16,9 @@ class Project(models.Model):
     def __str__(self) -> str:
         return f"[{self.creator.username}]{self.name}"
 
+    def get_notes(self):
+        return Note.objects.filter(project=self)
+
 
 class ProjectUser(models.Model):
     user = models.ForeignKey(
@@ -41,3 +44,15 @@ class ProjectUser(models.Model):
         for el in projectUser:
             projects.append(el.project)
         return projects
+
+
+class Note(models.Model):
+    text = models.CharField(max_length=256)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    is_completed = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        if self.is_completed:
+            return f"[+]{self.text} on {self.project.name}"
+        return f"[-]{self.text} on {self.project.name}"

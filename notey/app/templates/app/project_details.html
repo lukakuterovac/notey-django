@@ -1,4 +1,4 @@
-{% extends 'app/base.html' %} {% block content %}
+{% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
 <div class="container py-5 col col-md-6 col-lg-4">
   <a
     href="{% url 'app:projects' %}"
@@ -10,5 +10,12 @@
     </svg>
   </a>
   <h1>{{ project.name }}</h1>
+  <form action="{% url 'app:new_note' project.id %}" method="post" class="mb-2">
+    {% csrf_token %} {{ form|crispy }}
+    <input type="submit" value="Add" class="btn btn-primary" />
+  </form>
+  {% for note in notes %}
+  <p>{{ note.text }}</p>
+  {% endfor %}
 </div>
 {% endblock %}

@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from .models import Project
+from .models import Project, Note
 
 
 class NewUserForm(UserCreationForm):
@@ -26,3 +26,10 @@ class NewProjectForm(ModelForm):
         model = Project
         fields = ["name"]
         exclude = ["creator"]
+
+
+class NewNoteForm(ModelForm):
+    class Meta:
+        model = Note
+        fields = ["text"]
+        exclude = ["user", "project", "is_completed"]
