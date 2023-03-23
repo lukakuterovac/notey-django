@@ -3,8 +3,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import HttpResponseRedirect, redirect, render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .forms import NewProjectForm, NewUserForm, NewNoteForm
+
+from .forms import (
+    NewProjectForm,
+    NewUserForm,
+    NewNoteForm,
+    UpdateProjectForm,
+    NewProjectUser,
+)
 from .models import Project, ProjectUser, Note
 
 
@@ -58,6 +66,7 @@ def logout_request(request):
     return redirect("app:home")
 
 
+@login_required
 def projects(request):
     user = request.user
     projects = ProjectUser.getProjects(user=user)
@@ -137,3 +146,58 @@ def new_note(request, project_id):
         "notes": notes,
     }
     return render(request, "app/project_details.html", context)
+
+
+def project_settings(request, project_id):
+    user = request.user
+    project = Project.objects.get(pk=project_id)
+    users = project.get_users()
+
+    if request.method == "POST":
+        form = UpdateProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(
+                reverse("app:project_details", args=[project_id])
+            )
+    else:
+        form = UpdateProjectForm(instance=project)
+
+    add_user_form = NewProjectUser(initial={"project": project})
+
+    context = {
+        "project": project,
+        "user": user,
+        "form": form,
+        "add_user_form": add_user_form,
+        "users": users,
+    }
+    return render(request, "app/project_settings.html", context)
+
+
+def add_user(request, project_id):
+    user = request.user
+    project = Project.objects.get(pk=project_id)
+    users = project.get_users()
+
+    if request.method == "POST":
+        add_user_form = NewProjectUser(request.POST, initial={"project": project})
+        if add_user_form.is_valid():
+            instance = add_user_form.save(commit=False)
+            instance.save()
+            return HttpResponseRedirect(
+                reverse("app:project_details", args=[project_id])
+            )
+    else:
+        add_user_form = NewProjectUser(initial={"project": project})
+
+    form = UpdateProjectForm(instance=project)
+
+    context = {
+        "project": project,
+        "user": user,
+        "form": form,
+        "add_user_form": add_user_form,
+        "users": users,
+    }
+    return render(request, "app/project_settings.html", context)

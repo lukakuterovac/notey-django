@@ -12,4 +12,14 @@ urlpatterns = [
     path("projects/new", views.new_project, name="new_project"),
     path("projects/<int:project_id>", views.project_details, name="project_details"),
     path("projects/<int:project_id>/new", views.new_note, name="new_note"),
+    path(
+        "projects/<int:project_id>/settings",
+        views.project_settings,
+        name="project_settings",
+    ),
+    path(
+        "projects/<int:project_id>/settings/add_user",
+        views.add_user,
+        name="add_user",
+    ),
 ]

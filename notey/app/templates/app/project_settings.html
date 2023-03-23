@@ -1,0 +1,21 @@
+{% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
+<div class="m-5">
+  <h2>Project settings</h2>
+  <form
+    action="{% url 'app:project_settings' project.id %}"
+    method="post"
+    class="mb-3"
+  >
+    {% csrf_token %} {{ form|crispy }}
+    <input type="submit" value="Update" class="btn btn-primary" />
+  </form>
+  <h2>Manage users</h2>
+  <form action="{% url 'app:add_user' project.id %}" method="post" class="mb-3">
+    {% csrf_token %} {{ add_user_form|crispy }}
+    <input type="submit" value="Add" class="btn btn-primary" />
+  </form>
+  {% for user in users %}
+  <p>{{ user.user.username }}</p>
+  {% endfor %}
+</div>
+{% endblock %}

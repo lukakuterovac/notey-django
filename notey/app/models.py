@@ -9,15 +9,22 @@ class Profile(models.Model):
         return f"{self.user.username}'s profile"
 
 
+DEFAULT_PROJECT_IMAGE_URL = "https://images.unsplash.com/photo-1518976024611-28bf4b48222e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fG5vdGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=900&q=60"
+
+
 class Project(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=128, unique=True)
+    image_url = models.CharField(default=DEFAULT_PROJECT_IMAGE_URL, max_length=512)
 
     def __str__(self) -> str:
         return f"[{self.creator.username}]{self.name}"
 
     def get_notes(self):
         return Note.objects.filter(project=self)
+
+    def get_users(self):
+        return ProjectUser.objects.filter(project=self)
 
 
 class ProjectUser(models.Model):
