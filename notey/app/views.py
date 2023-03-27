@@ -148,6 +148,12 @@ def new_note(request, project_id):
     return render(request, "app/project_details.html", context)
 
 
+def delete_note(request, project_id, note_id):
+    note = Note.objects.get(pk=note_id)
+    note.delete()
+    return HttpResponseRedirect(reverse("app:project_details", args=[project_id]))
+
+
 def complete_note(request, project_id, note_id):
     note = Note.objects.get(pk=note_id)
     note.is_completed = not (note.is_completed)
