@@ -25,8 +25,26 @@
     {% csrf_token %} {{ form|crispy }}
     <input type="submit" value="Add" class="btn btn-primary" />
   </form>
-  {% for note in notes %}
-  <p>{{ note.user.username }}: {{ note.text }}</p>
-  {% endfor %}
+  {% for note in notes %} {% if note.is_completed %}
+  <div class="border-bottom">
+    <a
+      href="{% url 'app:complete_note' project.id note.id %}"
+      class="d-block text-white-50 text-decoration-line-through"
+    >
+      <p>{{ note.text }}</p>
+      <p class="text-white text-decoration-none">@{{ note.user.username }}</p>
+    </a>
+  </div>
+  {% else %}
+  <div class="border-bottom">
+    <a
+      href="{% url 'app:complete_note' project.id note.id %}"
+      class="d-block text-white text-decoration-none"
+    >
+      <p>{{ note.text }}</p>
+      <p class="text-white text-decoration-none">@{{ note.user.username }}</p>
+    </a>
+  </div>
+  {% endif %} {% endfor %}
 </div>
 {% endblock %}
