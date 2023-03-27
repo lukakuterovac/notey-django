@@ -109,6 +109,12 @@ def new_project(request):
     return render(request, "app/projects.html", context)
 
 
+def delete_project(request, project_id):
+    project = Project.objects.get(pk=project_id)
+    project.delete()
+    return HttpResponseRedirect(reverse("app:projects"))
+
+
 def project_details(request, project_id):
     project = Project.objects.get(pk=project_id)
     notes = project.get_notes()
