@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import HttpResponseRedirect, redirect, render
 from django.urls import reverse
@@ -220,3 +221,11 @@ def add_user(request, project_id):
         "users": users,
     }
     return render(request, "app/project_settings.html", context)
+
+
+def remove_user(request, project_id, user_id):
+    project = Project.objects.get(pk=project_id)
+    user = User.objects.get(pk=user_id)
+    project_user = ProjectUser.objects.get(project=project, user=user)
+    project_user.delete()
+    return HttpResponseRedirect(reverse("app:project_settings", args=[project_id]))

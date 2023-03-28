@@ -35,4 +35,9 @@ urlpatterns = [
         views.add_user,
         name="add_user",
     ),
+    path(
+        "projects/<int:project_id>/settings/remove_user/<int:user_id>",
+        views.remove_user,
+        name="remove_user",
+    ),
 ]

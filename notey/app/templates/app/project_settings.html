@@ -1,5 +1,5 @@
 {% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
-<div class="m-5">
+<div class="col-6 m-5">
   <h2>Project settings</h2>
   <form
     action="{% url 'app:project_settings' project.id %}"
@@ -20,8 +20,18 @@
     {% csrf_token %} {{ add_user_form|crispy }}
     <input type="submit" value="Add" class="btn btn-primary" />
   </form>
-  {% for user in users %}
-  <p>{{ user.user.username }}</p>
-  {% endfor %}
+  {% for user in users %} {% if user.user == request.user %}
+  <div class="border rounded-3 p-3 mb-3">You</div>
+  {% else %}
+  <div class="border rounded-3 p-3 mb-3">
+    {{ user.user.username }}
+    <a
+      href="{% url 'app:remove_user' project.id user.user.id %}"
+      class="float-end text-danger"
+    >
+      Remove
+    </a>
+  </div>
+  {% endif %} {% endfor %}
 </div>
 {% endblock %}
