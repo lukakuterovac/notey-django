@@ -178,7 +178,7 @@ def project_settings(request, project_id):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(
-                reverse("app:project_details", args=[project_id])
+                reverse("app:project_settings", args=[project_id])
             )
     else:
         form = UpdateProjectForm(instance=project)
@@ -206,7 +206,7 @@ def add_user(request, project_id):
             instance = add_user_form.save(commit=False)
             instance.save()
             return HttpResponseRedirect(
-                reverse("app:project_details", args=[project_id])
+                reverse("app:project_settings", args=[project_id])
             )
     else:
         add_user_form = NewProjectUser(initial={"project": project})
