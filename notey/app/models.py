@@ -4,6 +4,7 @@ from django.db import models
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    color = models.CharField(max_length=9, default="#FFFFFF")
 
     def __str__(self) -> str:
         return f"{self.user.username}'s profile"

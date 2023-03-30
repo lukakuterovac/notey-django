@@ -40,4 +40,5 @@ urlpatterns = [
         views.remove_user,
         name="remove_user",
     ),
+    path("profile", views.profile, name="profile"),
 ]

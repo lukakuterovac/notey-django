@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm, ValidationError
 
-from .models import Project, Note, ProjectUser
+from .models import Project, Note, ProjectUser, Profile
 
 
 class NewUserForm(UserCreationForm):
@@ -60,3 +60,10 @@ class NewProjectUser(ModelForm):
             raise ValidationError("This user has already been added.")
 
         return user
+
+
+class ProfileUpdateForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["color"]
+        widgets = {"color": forms.TextInput(attrs={"type": "color"})}

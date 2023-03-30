@@ -9,12 +9,13 @@
     <p class="text-white">{{ note.text }}</p>
     {% endif %}
   </a>
-  <span>
+  <div>
     <a
       href="{% url 'app:delete_note' project.id note.id %}"
       class="text-decoration-none text-danger"
-      >Delete</a
     >
+      Delete
+    </a>
     <div class="float-end">@{{ note.user.username }}</div>
-  </span>
+  </div>
 </div>

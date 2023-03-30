@@ -13,6 +13,7 @@ from .forms import (
     NewNoteForm,
     UpdateProjectForm,
     NewProjectUser,
+    ProfileUpdateForm,
 )
 from .models import Project, ProjectUser, Note
 
@@ -229,3 +230,19 @@ def remove_user(request, project_id, user_id):
     project_user = ProjectUser.objects.get(project=project, user=user)
     project_user.delete()
     return HttpResponseRedirect(reverse("app:project_settings", args=[project_id]))
+
+
+def profile(request):
+    user = request.user
+    profile = user.profile
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST)
+        if form.is_valid():
+            profile.color = form.cleaned_data["color"]
+            profile.save()
+            return HttpResponseRedirect(reverse("app:profile"))
+    else:
+        form = ProfileUpdateForm(instance=profile)
+
+    context = {"user": user, "profile": profile, "form": form}
+    return render(request, "app/profile.html", context)
