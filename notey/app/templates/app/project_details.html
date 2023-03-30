@@ -26,15 +26,9 @@
     <input type="submit" value="Add" class="btn btn-primary d-none" />
   </form>
   {% for note in notes %}
-  <div
-    class="rounded-3 border mb-2 py-2 px-3"
-    style="
-      background: {{ note.user.profile.color }}0C;
-      border-color: {{ note.user.profile.color }} !important;
-    "
-  >
-    {% include 'includes/note.html' with note=note project=project %}
-  </div>
+  <!-- Bad formatter -->
+  {% include 'includes/note.html' with note=note project=project %}
+  <!-- Bad formatter -->
   {% endfor %}
 </div>
 {% endblock %}

@@ -32,17 +32,19 @@
           class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-secondary bg-gradient fs-2 mb-3"
         >
           <svg class="bi" width="1em" height="1em">
-            <use xlink:href="#dice-2" />
+            <use xlink:href="#stickies" />
           </svg>
         </div>
-        <h3 class="fs-2">Feature #2</h3>
+        <h3 class="fs-2">Notes</h3>
         <p>
-          Feature description... Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing
-          elit.
+          Write notes in different projects. Notes function as to-do items so
+          you can click on them to complete them.
         </p>
-        <a href="#" class="icon-link d-inline-flex align-items-center">
-          Call to action
+        <a
+          href="{% url 'app:projects' %}"
+          class="icon-link d-inline-flex align-items-center"
+        >
+          Write a note
           <svg class="bi" width="1em" height="1em">
             <use xlink:href="#chevron-right" />
           </svg>
@@ -53,17 +55,19 @@
           class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-secondary bg-gradient fs-2 mb-3"
         >
           <svg class="bi" width="1em" height="1em">
-            <use xlink:href="#dice-3" />
+            <use xlink:href="#palette" />
           </svg>
         </div>
-        <h3 class="fs-2">Feature #3</h3>
+        <h3 class="fs-2">Customization</h3>
         <p>
-          Feature description... Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing
-          elit.
+          You can change your projects name and thumbnail inside the project
+          settings, or your username or color of notes on your profile page.
         </p>
-        <a href="#" class="icon-link d-inline-flex align-items-center">
-          Call to action
+        <a
+          href="{% url 'app:profile' %}"
+          class="icon-link d-inline-flex align-items-center"
+        >
+          Go to your profile
           <svg class="bi" width="1em" height="1em">
             <use xlink:href="#chevron-right" />
           </svg>
