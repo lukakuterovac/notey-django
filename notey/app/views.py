@@ -28,9 +28,7 @@ def register_request(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "Registration successful.")
             return redirect("app:home")
-        messages.error(request, "Unsuccessful registration. Invalid information.")
 
     form = NewUserForm()
 
@@ -50,12 +48,7 @@ def login_request(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.info(request, f"You are now logged in as {username}.")
                 return redirect("app:home")
-            else:
-                messages.error(request, "Invalid username or password.")
-        else:
-            messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
     return render(
         request=request, template_name="app/login.html", context={"login_form": form}
@@ -64,7 +57,6 @@ def login_request(request):
 
 def logout_request(request):
     logout(request)
-    messages.info(request, "You have successfully logged out.")
     return redirect("app:home")
 
 
@@ -232,6 +224,7 @@ def remove_user(request, project_id, user_id):
     return HttpResponseRedirect(reverse("app:project_settings", args=[project_id]))
 
 
+@login_required
 def profile(request):
     user = request.user
     profile = user.profile
