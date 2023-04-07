@@ -40,5 +40,6 @@ urlpatterns = [
         views.remove_user,
         name="remove_user",
     ),
+    path("projects/<int:project_id>/leave", views.leave_project, name="leave_project"),
     path("profile", views.profile, name="profile"),
 ]

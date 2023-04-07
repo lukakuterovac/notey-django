@@ -224,6 +224,14 @@ def remove_user(request, project_id, user_id):
     return HttpResponseRedirect(reverse("app:project_settings", args=[project_id]))
 
 
+def leave_project(request, project_id):
+    project = Project.objects.get(pk=project_id)
+    user = request.user
+    project_user = ProjectUser.objects.get(project=project, user=user)
+    project_user.delete()
+    return HttpResponseRedirect(reverse("app:projects"))
+
+
 @login_required
 def profile(request):
     user = request.user
