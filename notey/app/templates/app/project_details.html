@@ -31,13 +31,16 @@
   </a>
   {% endif %}
   <h1>{{ project.name }}</h1>
+  {% if "W" in project_user.permission %}
   <form action="{% url 'app:new_note' project.id %}" method="post" class="mb-2">
     {% csrf_token %} {{ form|crispy }}
     <input type="submit" value="Add" class="btn btn-primary d-none" />
   </form>
+  {% endif %}
+  <!-- Bad formatter -->
   {% for note in notes %}
   <!-- Bad formatter -->
-  {% include 'includes/note.html' with note=note project=project %}
+  {% include 'includes/note.html' with note=note project_user=project_user %}
   <!-- Bad formatter -->
   {% endfor %}
 </div>

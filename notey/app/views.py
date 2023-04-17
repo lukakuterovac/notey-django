@@ -15,7 +15,7 @@ from .forms import (
     NewProjectUser,
     ProfileUpdateForm,
 )
-from .models import Project, ProjectUser, Note
+from .models import Project, ProjectUser, Note, ProjectUserPermission
 
 
 def home(request):
@@ -83,8 +83,7 @@ def new_project(request):
             )
             project.save()
             proj_user = ProjectUser(
-                project=project,
-                user=user,
+                project=project, user=user, permission=ProjectUserPermission.DELETE
             )
             proj_user.save()
             form_errors = True
@@ -110,11 +109,14 @@ def delete_project(request, project_id):
 
 
 def project_details(request, project_id):
+    user = request.user
     project = Project.objects.get(pk=project_id)
+    project_user = ProjectUser.objects.get(user=user, project=project)
     notes = project.get_notes()
     note_form = NewNoteForm()
     context = {
         "project": project,
+        "project_user": project_user,
         "notes": notes,
         "form": note_form,
     }

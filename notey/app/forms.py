@@ -45,7 +45,7 @@ class NewNoteForm(ModelForm):
 class NewProjectUser(ModelForm):
     class Meta:
         model = ProjectUser
-        fields = ["user", "project"]
+        fields = ["user", "project", "permission"]
         widgets = {
             "project": forms.HiddenInput(),
         }

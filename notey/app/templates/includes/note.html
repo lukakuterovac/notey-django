@@ -6,30 +6,35 @@
     "
 >
   {% if note.is_completed %}
-  <p class="text-white-50 text-decoration-line-through">
+  <div class="mb-2 text-white-50 text-decoration-line-through">
     {{ note.text|urlize }}
-  </p>
+  </div>
   {% else %}
-  <p class="text-white">{{ note.text|urlize }}</p>
+  <div class="mb-2 text-white">{{ note.text|urlize }}</div>
   {% endif %}
-  <p>@{{ note.user.username }}</p>
-  <hr class="m-0 p-0" />
-  <div class="my-2">
+  <div>@{{ note.user.username }}</div>
+  {% if "C" in project_user.permission %}
+  <hr class="m-0 p-0 my-2" />
+  <div class="mt-2">
     {% if not note.is_completed %}
     <a
-      href="{% url 'app:complete_note' project.id note.id %}"
-      class="text-decoration-none text-success"
+      href="{% url 'app:complete_note' project_user.project.id note.id %}"
+      class="m-0 p-0 me-2 text-decoration-none text-success"
     >
       Complete
     </a>
     {% else %}
-    <div class="d-inline text-secondary">Completed</div>
+    <div class="m-0 p-0 me-2 d-inline text-secondary">Completed</div>
     {% endif %}
+    <!-- . -->
+    {% if "D" in project_user.permission %}
     <a
       href="{% url 'app:delete_note' project.id note.id %}"
-      class="text-decoration-none text-danger float-end"
+      class="m-0 p-0 text-decoration-none text-danger"
     >
       Delete
     </a>
+    {% endif %}
   </div>
+  {% endif %}
 </div>

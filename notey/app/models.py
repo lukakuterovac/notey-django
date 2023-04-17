@@ -30,7 +30,19 @@ class Project(models.Model):
         return ProjectUser.objects.filter(project=self)
 
 
+class ProjectUserPermission(models.TextChoices):
+    DELETE = "RWCD", "Read, write, complete and delete"
+    COMPLETE = "RWC-", "Read, write and complete"
+    WRITE = "RW--", "Read and write"
+    READ = "R---", "Read"
+
+
 class ProjectUser(models.Model):
+    permission = models.CharField(
+        max_length=4,
+        choices=ProjectUserPermission.choices,
+        default=ProjectUserPermission.READ,
+    )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -46,7 +58,7 @@ class ProjectUser(models.Model):
         unique_together = ("user", "project")
 
     def __str__(self) -> str:
-        return f"{self.user.username}-{self.project.name}"
+        return f"{self.user.username}-{self.project.name} [{self.permission}]"
 
     def getProjects(user):
         projectUser = ProjectUser.objects.all().filter(user=user)
