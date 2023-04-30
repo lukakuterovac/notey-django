@@ -15,6 +15,14 @@
   >
     Delete project
   </a>
+  {% if is_archiveable %}
+  <a
+    href="{% url 'app:archive_project' project.id %}"
+    class="btn btn-outline-warning"
+  >
+    Archive project
+  </a>
+  {% endif %}
   <h2>Manage users</h2>
   <form action="{% url 'app:add_user' project.id %}" method="post" class="mb-3">
     {% csrf_token %} {{ add_user_form|crispy }}

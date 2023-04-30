@@ -19,6 +19,7 @@ class Project(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=128, unique=True)
     image_url = models.CharField(default=DEFAULT_PROJECT_IMAGE_URL, max_length=512)
+    is_archived = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"[{self.creator.username}]{self.name}"
@@ -60,12 +61,27 @@ class ProjectUser(models.Model):
     def __str__(self) -> str:
         return f"{self.user.username}-{self.project.name} [{self.permission}]"
 
-    def getProjects(user):
+    def getProjects(user: User):
+        projectUser = ProjectUser.objects.all().filter(user=user)
+        temp = []
+        projects = []
+        for el in projectUser:
+            temp.append(el.project)
+        for project in temp:
+            if not project.is_archived:
+                projects.append(project)
+        return projects
+
+    def getArchivedProjects(user: User):
         projectUser = ProjectUser.objects.all().filter(user=user)
         projects = []
         for el in projectUser:
             projects.append(el.project)
-        return projects
+        archived_projects = []
+        for project in projects:
+            if project.is_archived:
+                archived_projects.append(project)
+        return archived_projects
 
 
 class Note(models.Model):

@@ -167,6 +167,16 @@ def project_settings(request, project_id):
     user = request.user
     project = Project.objects.get(pk=project_id)
     users = project.get_users()
+    notes = project.get_notes()
+    is_archiveable = True
+
+    for note in notes:
+        if not note.is_completed:
+            is_archiveable = False
+            break
+
+    if len(notes) == 0:
+        is_archiveable = False
 
     if request.method == "POST":
         form = UpdateProjectForm(request.POST, instance=project)
@@ -186,6 +196,7 @@ def project_settings(request, project_id):
         "form": form,
         "add_user_form": add_user_form,
         "users": users,
+        "is_archiveable": is_archiveable,
     }
     return render(request, "app/project_settings.html", context)
 
@@ -194,6 +205,13 @@ def add_user(request, project_id):
     user = request.user
     project = Project.objects.get(pk=project_id)
     users = project.get_users()
+    notes = project.get_notes()
+    is_archiveable = True
+
+    for note in notes:
+        if not note.is_completed:
+            is_archiveable = False
+            break
 
     if request.method == "POST":
         add_user_form = NewProjectUser(request.POST, initial={"project": project})
@@ -214,6 +232,7 @@ def add_user(request, project_id):
         "form": form,
         "add_user_form": add_user_form,
         "users": users,
+        "is_archiveable": is_archiveable,
     }
     return render(request, "app/project_settings.html", context)
 
@@ -249,3 +268,34 @@ def profile(request):
 
     context = {"user": user, "profile": profile, "form": form}
     return render(request, "app/profile.html", context)
+
+
+def archive(request):
+    user = request.user
+    projects = ProjectUser.getArchivedProjects(user=user)
+    context = {
+        "projects": projects,
+    }
+    return render(request, "app/archive.html", context)
+
+
+def archive_project_details(request, project_id):
+    user = request.user
+    project = Project.objects.get(pk=project_id)
+    project_user = ProjectUser.objects.get(user=user, project=project)
+    notes = project.get_notes()
+    note_form = NewNoteForm()
+    context = {
+        "project": project,
+        "project_user": project_user,
+        "notes": notes,
+        "form": note_form,
+    }
+    return render(request, "app/archive_project_details.html", context)
+
+
+def archive_project(request, project_id):
+    project = Project.objects.get(pk=project_id)
+    project.is_archived = True
+    project.save()
+    return HttpResponseRedirect(reverse("app:projects"))

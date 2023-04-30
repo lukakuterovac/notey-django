@@ -9,6 +9,13 @@ urlpatterns = [
     path("login", views.login_request, name="login"),
     path("logout", views.logout_request, name="logout"),
     path("projects", views.projects, name="projects"),
+    path("archive", views.archive, name="archive"),
+    path(
+        "archive/<int:project_id>",
+        views.archive_project_details,
+        name="archive_project_details",
+    ),
+    path("profile", views.profile, name="profile"),
     path("projects/new", views.new_project, name="new_project"),
     path(
         "projects/delete/<int:project_id>", views.delete_project, name="delete_project"
@@ -41,5 +48,9 @@ urlpatterns = [
         name="remove_user",
     ),
     path("projects/<int:project_id>/leave", views.leave_project, name="leave_project"),
-    path("profile", views.profile, name="profile"),
+    path(
+        "projects/archive/<int:project_id>",
+        views.archive_project,
+        name="archive_project",
+    ),
 ]
