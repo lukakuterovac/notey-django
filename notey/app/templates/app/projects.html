@@ -33,7 +33,7 @@
     >
       <div class="card me-2 mb-2 d-inline-block" style="width: 18rem">
         <img
-          src="{{ project.image_url }}"
+          src="{{ project.image.url }}"
           class="card-img-top"
           style="height: 12rem; object-fit: cover"
         />
@@ -67,7 +67,11 @@
           </h1>
           <a href="{% url 'app:projects' %}" class="btn-close"></a>
         </div>
-        <form action="{% url 'app:new_project' %}" method="post">
+        <form
+          action="{% url 'app:new_project' %}"
+          method="post"
+          enctype="multipart/form-data"
+        >
           {% csrf_token %}
           <div class="modal-body">{{ form|crispy }}</div>
           <div class="modal-footer">

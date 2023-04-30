@@ -15,7 +15,13 @@ from .forms import (
     NewProjectUser,
     ProfileUpdateForm,
 )
-from .models import Project, ProjectUser, Note, ProjectUserPermission
+from .models import (
+    Project,
+    ProjectUser,
+    Note,
+    ProjectUserPermission,
+    DEFAULT_PROJECT_IMAGE,
+)
 
 
 def home(request):
@@ -75,11 +81,12 @@ def projects(request):
 def new_project(request):
     user = request.user
     if request.method == "POST":
-        form = NewProjectForm(request.POST)
+        form = NewProjectForm(request.POST, request.FILES)
         if form.is_valid():
             project = Project(
                 creator=user,
                 name=form.cleaned_data["name"],
+                image=request.FILES.get("image", DEFAULT_PROJECT_IMAGE),
             )
             project.save()
             proj_user = ProjectUser(
@@ -179,9 +186,11 @@ def project_settings(request, project_id):
         is_archiveable = False
 
     if request.method == "POST":
-        form = UpdateProjectForm(request.POST, instance=project)
+        form = UpdateProjectForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
             form.save()
+            project.image = form.cleaned_data.get("image")
+            project.save()
             return HttpResponseRedirect(
                 reverse("app:project_settings", args=[project_id])
             )

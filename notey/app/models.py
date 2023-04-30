@@ -10,15 +10,15 @@ class Profile(models.Model):
         return f"{self.user.username}'s profile"
 
 
-DEFAULT_PROJECT_IMAGE_URL = (
-    "https://images.unsplash.com/photo-1518976024611-28bf4b48222e"
-)
+DEFAULT_PROJECT_IMAGE = "images/projects/DEFAULT_PROJECT_IMAGE.jpg"
 
 
 class Project(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=128, unique=True)
-    image_url = models.CharField(default=DEFAULT_PROJECT_IMAGE_URL, max_length=512)
+    image = models.ImageField(
+        upload_to="images/projects/", default=DEFAULT_PROJECT_IMAGE
+    )
     is_archived = models.BooleanField(default=False)
 
     def __str__(self) -> str:

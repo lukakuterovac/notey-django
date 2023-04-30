@@ -5,6 +5,7 @@
     action="{% url 'app:project_settings' project.id %}"
     method="post"
     class="mb-3"
+    enctype="multipart/form-data"
   >
     {% csrf_token %} {{ form|crispy }}
     <input type="submit" value="Update" class="btn btn-primary" />

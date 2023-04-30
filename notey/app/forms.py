@@ -24,14 +24,14 @@ class NewUserForm(UserCreationForm):
 class NewProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ["name"]
-        exclude = ["creator", "image_url"]
+        fields = ["name", "image"]
+        exclude = ["creator"]
 
 
 class UpdateProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ["name", "image_url"]
+        fields = ["name", "image"]
         exclude = ["creator"]
 
 
