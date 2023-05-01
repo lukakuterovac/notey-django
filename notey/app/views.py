@@ -1,26 +1,26 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.shortcuts import HttpResponseRedirect, redirect, render
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-
 
 from .forms import (
-    NewProjectForm,
-    NewUserForm,
     NewNoteForm,
-    UpdateProjectForm,
+    NewProjectForm,
     NewProjectUser,
+    NewUserForm,
     ProfileUpdateForm,
+    UpdateProjectForm,
 )
 from .models import (
+    DEFAULT_PROJECT_IMAGE,
+    Attachment,
+    Note,
     Project,
     ProjectUser,
-    Note,
     ProjectUserPermission,
-    DEFAULT_PROJECT_IMAGE,
 )
 
 
@@ -134,7 +134,7 @@ def new_note(request, project_id):
     user = request.user
     project = Project.objects.get(pk=project_id)
     if request.method == "POST":
-        form = NewNoteForm(request.POST)
+        form = NewNoteForm(request.POST, request.FILES)
         if form.is_valid():
             note = Note(
                 text=form.cleaned_data["text"],
@@ -143,6 +143,14 @@ def new_note(request, project_id):
                 is_completed=False,
             )
             note.save()
+
+            attachments = request.FILES.getlist("attachment")
+            for attachment in attachments:
+                Attachment.objects.create(
+                    note=note,
+                    file=attachment
+                ).save()
+
             return HttpResponseRedirect(
                 reverse("app:project_details", args=[project_id])
             )

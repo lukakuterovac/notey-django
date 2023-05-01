@@ -94,3 +94,20 @@ class Note(models.Model):
         if self.is_completed:
             return f"[+]{self.text} on {self.project.name}"
         return f"[-]{self.text} on {self.project.name}"
+
+    def get_attachments(self):
+        attachments = Attachment.objects.all()
+        return attachments.filter(note=self)
+
+
+class Attachment(models.Model):
+    note = models.ForeignKey(Note, on_delete=models.CASCADE)
+    file = models.FileField(upload_to="attachment/note/")
+
+    def __str__(self) -> str:
+        return f"{self.note}"
+
+    def filename(self):
+        filename_with_root_dir = self.file.name
+        ROOT_DIR = "attachment/note/"
+        return filename_with_root_dir.replace(ROOT_DIR, "")

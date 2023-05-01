@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm, ValidationError
 
-from .models import Project, Note, ProjectUser, Profile
+from .models import Note, Profile, Project, ProjectUser
 
 
 class NewUserForm(UserCreationForm):
@@ -36,9 +36,14 @@ class UpdateProjectForm(ModelForm):
 
 
 class NewNoteForm(ModelForm):
+    attachment = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={"multiple": True}),
+        required=False,
+    )
+
     class Meta:
         model = Note
-        fields = ["text"]
+        fields = ["text", "attachment"]
         exclude = ["user", "project", "is_completed"]
 
 
