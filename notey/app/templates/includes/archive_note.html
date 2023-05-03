@@ -6,11 +6,11 @@
     "
 >
   {% if note.is_completed %}
-  <div class="mb-2 text-white-50 text-decoration-line-through">
+  <div class="mb-2 text-body-emphasis-50 text-decoration-line-through">
     {{ note.text|urlize }}
   </div>
   {% else %}
-  <div class="mb-2 text-white">{{ note.text|urlize }}</div>
+  <div class="mb-2 text-body-emphasis">{{ note.text|urlize }}</div>
   {% endif %}
   <div>@{{ note.user.username }}</div>
   {% if note.get_attachments.exists %}

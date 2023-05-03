@@ -138,7 +138,11 @@
             class="navbar-brand d-flex justify-content-center"
             href="{% url 'app:home' %}"
           >
-            <img src="{% static 'app/image/logo.png' %}" style="height: 32px" />
+            <img
+              id="logoImg"
+              src="{% static 'app/image/logo.png' %}"
+              style="height: 32px"
+            />
             Notey
           </a>
           <button
@@ -169,6 +173,14 @@
                 <a class="nav-link" href="{% url 'app:profile' %}">Profile</a>
               </li>
               {% endif %}
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a id="btnSwitch" class="nav-link me-3">
+                  <i id="iconSwitch" class="bi bi-moon"></i>
+                  <span id="textSwitch"> Dark mode </span>
+                </a>
+              </li>
             </ul>
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item dropdown">
@@ -222,5 +234,51 @@
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"
     ></script>
+
+    <!-- Dark mode toggle -->
+    <script>
+      function setTheme(theme) {
+        var image = document.getElementById("logoImg");
+        var textSwitch = document.getElementById("textSwitch");
+        if (theme === "dark") {
+          document.documentElement.setAttribute("data-bs-theme", "dark");
+          document
+            .getElementById("iconSwitch")
+            .classList.replace("bi-sun", "bi-moon");
+          image.src = "{% static 'app/image/logo.png' %}";
+          textSwitch.innerHTML = "Dark mode";
+        } else {
+          document.documentElement.setAttribute("data-bs-theme", "light");
+          document
+            .getElementById("iconSwitch")
+            .classList.replace("bi-moon", "bi-sun");
+          image.src = "{% static 'app/image/logo-light.png' %}";
+          textSwitch.innerHTML = "Light mode";
+        }
+      }
+
+      const userPreference = localStorage.getItem("darkMode");
+
+      if (userPreference) {
+        setTheme(userPreference);
+      } else {
+        // Set the icon based on the initial theme
+        if (document.documentElement.getAttribute("data-bs-theme") == "dark") {
+          document
+            .getElementById("iconSwitch")
+            .classList.replace("bi-moon", "bi-sun");
+        }
+      }
+
+      document.getElementById("btnSwitch").addEventListener("click", () => {
+        if (document.documentElement.getAttribute("data-bs-theme") == "dark") {
+          setTheme("light");
+          localStorage.setItem("darkMode", "light");
+        } else {
+          setTheme("dark");
+          localStorage.setItem("darkMode", "dark");
+        }
+      });
+    </script>
   </body>
 </html>
