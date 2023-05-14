@@ -1,5 +1,5 @@
 {% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
-<div class="col-6 m-5">
+<div class="container py-5 col col-md-6 col-lg-4">
   <h2>Project settings</h2>
   <form
     action="{% url 'app:project_settings' project.id %}"
@@ -8,18 +8,18 @@
     enctype="multipart/form-data"
   >
     {% csrf_token %} {{ form|crispy }}
-    <input type="submit" value="Update" class="btn btn-primary" />
+    <input type="submit" value="Update" class="btn btn-primary px-4 py-2" />
   </form>
   <a
     href="{% url 'app:delete_project' project.id %}"
-    class="btn btn-outline-danger"
+    class="btn btn-danger mb-3 me-2 px-4 py-2"
   >
     Delete project
   </a>
   {% if is_archiveable %}
   <a
     href="{% url 'app:archive_project' project.id %}"
-    class="btn btn-outline-warning"
+    class="btn btn-warning mb-3 px-4 py-2"
   >
     Archive project
   </a>
@@ -27,7 +27,7 @@
   <h2>Manage users</h2>
   <form action="{% url 'app:add_user' project.id %}" method="post" class="mb-3">
     {% csrf_token %} {{ add_user_form|crispy }}
-    <input type="submit" value="Add" class="btn btn-primary" />
+    <input type="submit" value="Add" class="btn btn-primary px-4 py-2" />
   </form>
   {% for user in users %} {% if user.user == request.user %}
   <div class="border rounded-3 p-3 mb-3">You</div>

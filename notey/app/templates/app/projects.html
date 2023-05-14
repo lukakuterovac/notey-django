@@ -2,9 +2,11 @@
 <div
   class="container d-flex flex-column align-items-center justify-content-center"
 >
-  <h1>Projects</h1>
+  <div class="py-3">
+    <h1 class="d-inline">Projects</h1>
+  </div>
   <div
-    class="mb-2 d-flex flex-row flex-wrap align-items-center justify-content-center"
+    class="mb-5 d-flex flex-row flex-wrap align-items-center justify-content-center"
   >
     <a
       href=""
@@ -42,12 +44,6 @@
         </div>
       </div>
     </a>
-    <!-- <a
-      href="{% url 'app:project_details' project.id %}"
-      class="btn btn-secondary"
-    >
-      {{ project.name }}
-    </a> -->
     {% endfor %}
   </div>
 
@@ -75,10 +71,15 @@
           {% csrf_token %}
           <div class="modal-body">{{ form|crispy }}</div>
           <div class="modal-footer">
-            <a class="btn btn-secondary" href="{% url 'app:projects' %}">
+            <a
+              class="btn btn-secondary px-4 py-2"
+              href="{% url 'app:projects' %}"
+            >
               Close
             </a>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary px-4 py-2">
+              Create
+            </button>
           </div>
         </form>
       </div>

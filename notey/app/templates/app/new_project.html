@@ -3,8 +3,10 @@
   <h1>New project</h1>
   <form action="{% url 'app:new_project' %}" method="post">
     {% csrf_token %} {{ form|crispy }}
-    <input type="submit" value="Create" class="btn btn-primary" />
-    <a href="{% url 'app:projects' %}" class="btn btn-secondary">Cancel</a>
+    <input type="submit" value="Create" class="btn btn-primary px-4 py-2" />
+    <a href="{% url 'app:projects' %}" class="btn btn-secondary px-4 py-2">
+      Cancel
+    </a>
   </form>
 </div>
 {% endblock %}

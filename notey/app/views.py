@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -29,36 +28,43 @@ def home(request):
 
 
 def register_request(request):
+    context = {}
+
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect("app:home")
+    else:
+        form = NewUserForm()
 
-    form = NewUserForm()
+    context["register_form"] = form
 
-    return render(
-        request=request,
-        template_name="app/register.html",
-        context={"register_form": form},
-    )
+    return render(request, "app/register.html", context)
 
 
 def login_request(request):
+    context = {}
+
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
+            username, password = (
+                form.cleaned_data["username"],
+                form.cleaned_data["password"],
+            )
             user = authenticate(username=username, password=password)
+
             if user is not None:
                 login(request, user)
                 return redirect("app:home")
-    form = AuthenticationForm()
-    return render(
-        request=request, template_name="app/login.html", context={"login_form": form}
-    )
+    else:
+        form = AuthenticationForm()
+
+    context["login_form"] = form
+
+    return render(request, "app/login.html", context)
 
 
 def logout_request(request):
@@ -146,10 +152,7 @@ def new_note(request, project_id):
 
             attachments = request.FILES.getlist("attachment")
             for attachment in attachments:
-                Attachment.objects.create(
-                    note=note,
-                    file=attachment
-                ).save()
+                Attachment.objects.create(note=note, file=attachment).save()
 
             return HttpResponseRedirect(
                 reverse("app:project_details", args=[project_id])
@@ -283,13 +286,18 @@ def profile(request):
     else:
         form = ProfileUpdateForm(instance=profile)
 
-    context = {"user": user, "profile": profile, "form": form}
+    context = {
+        "user": user,
+        "profile": profile,
+        "form": form,
+    }
     return render(request, "app/profile.html", context)
 
 
 def archive(request):
     user = request.user
     projects = ProjectUser.getArchivedProjects(user=user)
+    print("Aaaaaa", len(projects))
     context = {
         "projects": projects,
     }

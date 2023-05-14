@@ -20,6 +20,14 @@ class NewUserForm(UserCreationForm):
             user.save()
         return user
 
+    def clean_email(self):
+        email = self.data["email"]
+
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("A user with that email already exists.")
+
+        return email
+
 
 class NewProjectForm(ModelForm):
     class Meta:
