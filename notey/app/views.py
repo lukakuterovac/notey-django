@@ -12,6 +12,7 @@ from .forms import (
     NewUserForm,
     ProfileUpdateForm,
     UpdateProjectForm,
+    UserUpdateForm,
 )
 from .models import (
     DEFAULT_PROJECT_IMAGE,
@@ -278,18 +279,22 @@ def profile(request):
     user = request.user
     profile = user.profile
     if request.method == "POST":
+        user_form = UserUpdateForm(request.POST, instance=request.user)
         form = ProfileUpdateForm(request.POST)
-        if form.is_valid():
+        if user_form.is_valid() and form.is_valid():
+            user_form.save()
             profile.color = form.cleaned_data["color"]
             profile.save()
             return HttpResponseRedirect(reverse("app:profile"))
     else:
+        user_form = UserUpdateForm(instance=request.user)
         form = ProfileUpdateForm(instance=profile)
 
     context = {
         "user": user,
         "profile": profile,
         "form": form,
+        "user_form": user_form,
     }
     return render(request, "app/profile.html", context)
 
