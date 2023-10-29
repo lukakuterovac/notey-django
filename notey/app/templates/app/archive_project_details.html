@@ -1,0 +1,20 @@
+{% extends 'app/base.html' %} {% block content %}
+<div class="container py-5 col col-md-6 col-lg-4">
+  <a
+    href="{% url 'app:archive' %}"
+    class="icon-link d-inline-flex align-items-center"
+  >
+    Back to archive
+    <svg class="bi" width="1em" height="1em">
+      <use xlink:href="#chevron-right" />
+    </svg>
+  </a>
+  <h1>{{ project.name }}</h1>
+  <!-- Bad formatter -->
+  {% for note in notes %}
+  <!-- Bad formatter -->
+  {% include 'includes/archive_note.html' with note=note project_user=project_user %}
+  <!-- Bad formatter -->
+  {% endfor %}
+</div>
+{% endblock %}

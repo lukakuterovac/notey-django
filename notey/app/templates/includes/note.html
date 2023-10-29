@@ -1,0 +1,59 @@
+<div
+  class="rounded-3 border mb-2 py-2 px-3"
+  style="
+      background: {{ note.user.profile.color }}0C;
+      border-color: {{ note.user.profile.color }} !important;
+    "
+>
+  {% if note.is_completed %}
+  <div class="mb-2 text-body-emphasis-50 text-decoration-line-through">
+    {{ note.text|urlize }}
+  </div>
+  {% else %}
+  <div class="mb-2 text-body-emphasis">{{ note.text|urlize }}</div>
+  {% endif %}
+  <div>@{{ note.user.username }}</div>
+  {% if "C" in project_user.permission %}
+  <hr class="m-0 p-0 my-2" />
+  <div class="mt-2">
+    {% if not note.is_completed %}
+    <a
+      href="{% url 'app:complete_note' project_user.project.id note.id %}"
+      class="m-0 p-0 me-2 text-decoration-none text-success"
+    >
+      Complete
+    </a>
+    {% else %}
+    <div class="m-0 p-0 me-2 d-inline text-secondary">Completed</div>
+    {% endif %}
+    <!-- . -->
+    {% if "D" in project_user.permission %}
+    <a
+      href="{% url 'app:delete_note' project.id note.id %}"
+      class="m-0 p-0 text-decoration-none text-danger"
+    >
+      Delete
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+  <!-- a -->
+  {% if note.get_attachments.exists %}
+  <hr class="m-0 p-0 my-2" />
+  {% for attachment in note.get_attachments %}
+  <ul class="list-group">
+    <a
+      href="{{ attachment.file.url }}"
+      style="
+        background: {{ note.user.profile.color }}0C;
+        border-color: {{ note.user.profile.color }} !important;
+      "
+      class="my-1 list-group-item list-group-item-action text-truncate"
+    >
+      {{ attachment.filename }}
+    </a>
+  </ul>
+  {% endfor %}
+  <!-- a -->
+  {% endif %}
+</div>

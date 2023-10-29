@@ -1,0 +1,34 @@
+<div
+  class="rounded-3 border mb-2 py-2 px-3"
+  style="
+      background: {{ note.user.profile.color }}0C;
+      border-color: {{ note.user.profile.color }} !important;
+    "
+>
+  {% if note.is_completed %}
+  <div class="mb-2 text-body-emphasis-50 text-decoration-line-through">
+    {{ note.text|urlize }}
+  </div>
+  {% else %}
+  <div class="mb-2 text-body-emphasis">{{ note.text|urlize }}</div>
+  {% endif %}
+  <div>@{{ note.user.username }}</div>
+  {% if note.get_attachments.exists %}
+  <hr class="m-0 p-0 my-2" />
+  {% for attachment in note.get_attachments %}
+  <ul class="list-group">
+    <a
+      href="{{ attachment.file.url }}"
+      style="
+        background: {{ note.user.profile.color }}0C;
+        border-color: {{ note.user.profile.color }} !important;
+      "
+      class="my-1 list-group-item list-group-item-action text-truncate"
+    >
+      {{ attachment.filename }}
+    </a>
+  </ul>
+  {% endfor %}
+  <!-- a -->
+  {% endif %}
+</div>

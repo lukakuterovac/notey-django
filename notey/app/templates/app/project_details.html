@@ -1,0 +1,52 @@
+{% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
+<div class="container py-5 col col-md-6 col-lg-4">
+  <a
+    href="{% url 'app:projects' %}"
+    class="icon-link d-inline-flex align-items-center"
+  >
+    Back to projects
+    <svg class="bi" width="1em" height="1em">
+      <use xlink:href="#chevron-right" />
+    </svg>
+  </a>
+  {% if user == project.creator %}
+  <a
+    href="{% url 'app:project_settings' project.id %}"
+    class="icon-link d-inline-flex align-items-center float-end"
+  >
+    Project settings
+    <svg class="bi" width="1em" height="1em">
+      <use xlink:href="#gear" />
+    </svg>
+  </a>
+  {% else %}
+  <a
+    href="{% url 'app:leave_project' project.id %}"
+    class="icon-link d-inline-flex align-items-center float-end text-danger"
+  >
+    Leave project
+    <svg class="bi" width="1em" height="1em">
+      <use xlink:href="#x" />
+    </svg>
+  </a>
+  {% endif %}
+  <h1>{{ project.name }}</h1>
+  {% if "W" in project_user.permission %}
+  <form
+    action="{% url 'app:new_note' project.id %}"
+    method="post"
+    class="mb-2"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %} {{ form|crispy }}
+    <input type="submit" value="Add" class="btn btn-primary d-none px-4 py-2" />
+  </form>
+  {% endif %}
+  <!-- Bad formatter -->
+  {% for note in notes %}
+  <!-- Bad formatter -->
+  {% include 'includes/note.html' with note=note project_user=project_user %}
+  <!-- Bad formatter -->
+  {% endfor %}
+</div>
+{% endblock %}

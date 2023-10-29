@@ -1,0 +1,79 @@
+{% extends 'app/base.html' %} {% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center">
+  <p class="mt-5 display-1 text-body-emphasis">Notey</p>
+  <div class="container px-4 py-5" id="featured-3">
+    <h2 class="pb-2 border-bottom">Features</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+      <div class="feature col">
+        <div
+          class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+        >
+          <svg class="bi" width="1em" height="1em">
+            <use xlink:href="#view-list" />
+          </svg>
+        </div>
+        <h3 class="fs-2">Projects</h3>
+        <p>
+          Create projects and write notes in them. Add other users to the
+          project You made to collaborate on the notes.
+        </p>
+        <a
+          href="{% url 'app:projects' %}"
+          class="icon-link d-inline-flex align-items-center"
+        >
+          Go to projects
+          <svg class="bi" width="1em" height="1em">
+            <use xlink:href="#chevron-right" />
+          </svg>
+        </a>
+      </div>
+      <div class="feature col">
+        <div
+          class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+        >
+          <svg class="bi" width="1em" height="1em">
+            <use xlink:href="#stickies" />
+          </svg>
+        </div>
+        <h3 class="fs-2">Notes</h3>
+        <p>
+          Write notes in different projects. Notes function as to-do items so
+          you can click on them to complete them.
+        </p>
+        <a
+          href="{% url 'app:projects' %}"
+          class="icon-link d-inline-flex align-items-center"
+        >
+          Write a note
+          <svg class="bi" width="1em" height="1em">
+            <use xlink:href="#chevron-right" />
+          </svg>
+        </a>
+      </div>
+      <div class="feature col">
+        <div
+          class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+        >
+          <svg class="bi" width="1em" height="1em">
+            <use xlink:href="#palette" />
+          </svg>
+        </div>
+        <h3 class="fs-2">Customization</h3>
+        <p>
+          You can change your projects name and thumbnail inside the project
+          settings, or your username or color of notes on your profile page.
+        </p>
+        <a
+          href="{% url 'app:profile' %}"
+          class="icon-link d-inline-flex align-items-center"
+        >
+          Go to your profile
+          <svg class="bi" width="1em" height="1em">
+            <use xlink:href="#chevron-right" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

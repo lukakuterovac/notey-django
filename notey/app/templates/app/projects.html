@@ -1,0 +1,99 @@
+{% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
+<div
+  class="container d-flex flex-column align-items-center justify-content-center"
+>
+  <div class="py-3">
+    <h1 class="d-inline">Projects</h1>
+  </div>
+  <div
+    class="mb-5 d-flex flex-row flex-wrap align-items-center justify-content-center"
+  >
+    <a
+      href=""
+      id="modal-toggle"
+      class="text-decoration-none text-body-emphasis"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal"
+    >
+      <div class="card me-2 mb-2 d-inline-block" style="width: 18rem">
+        <img
+          src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1988&q=80"
+          class="card-img-top"
+          style="height: 12rem; object-fit: cover"
+        />
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi bi-plus-circle me-1"></i>Create a new project
+          </h5>
+        </div>
+      </div>
+    </a>
+    {% for project in projects %}
+    <a
+      href="{% url 'app:project_details' project.id %}"
+      class="text-decoration-none text-body-emphasis"
+    >
+      <div class="card me-2 mb-2 d-inline-block" style="width: 18rem">
+        <img
+          src="{{ project.image.url }}"
+          class="card-img-top"
+          style="height: 12rem; object-fit: cover"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ project.name }}</h5>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Create a new project
+          </h1>
+          <a href="{% url 'app:projects' %}" class="btn-close"></a>
+        </div>
+        <form
+          action="{% url 'app:new_project' %}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <div class="modal-body">{{ form|crispy }}</div>
+          <div class="modal-footer">
+            <a
+              class="btn btn-secondary px-4 py-2"
+              href="{% url 'app:projects' %}"
+            >
+              Close
+            </a>
+            <button type="submit" class="btn btn-primary px-4 py-2">
+              Create
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = function () {
+    var error = "{{ form_errors }}";
+
+    if (error == "True") {
+      document.getElementById("modal-toggle").click();
+    }
+  };
+</script>
+{% endblock %}
