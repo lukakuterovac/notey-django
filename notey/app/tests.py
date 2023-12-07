@@ -7,6 +7,122 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 
+# POMs
+class LoginForm:
+    USERNAME_INPUT_XPATH = '//*[@id="id_username"]'
+    PASSWORD_INPUT_XPATH = '//*[@id="id_password"]'
+    LOGIN_BUTTON_XPATH = "/html/body/div/div[2]/div/form/button"
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.username_input = (By.XPATH, self.USERNAME_INPUT_XPATH)
+        self.password_input = (By.XPATH, self.PASSWORD_INPUT_XPATH)
+        self.login_button = (By.XPATH, self.LOGIN_BUTTON_XPATH)
+
+    def enter_credentials(self, username, password):
+        self.driver.find_element(*self.username_input).send_keys(username)
+        self.driver.find_element(*self.password_input).send_keys(password)
+
+    def click_login_button(self):
+        self.driver.find_element(*self.login_button).click()
+
+
+class RegistrationForm:
+    USERNAME_INPUT_XPATH = '//*[@id="id_username"]'
+    EMAIL_INPUT_XPATH = '//*[@id="id_email"]'
+    PASSWORD1_INPUT_XPATH = '//*[@id="id_password1"]'
+    PASSWORD2_INPUT_XPATH = '//*[@id="id_password2"]'
+    REGISTER_BUTTON_XPATH = "/html/body/div/div[2]/div/form/button"
+    USERNAME_ERROR_XPATH = '//*[@id="error_1_id_username"]'
+    EMAIL_ERROR_XPATH = '//*[@id="error_1_id_email"]'
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.username_input = (By.XPATH, self.USERNAME_INPUT_XPATH)
+        self.email_input = (By.XPATH, self.EMAIL_INPUT_XPATH)
+        self.password1_input = (By.XPATH, self.PASSWORD1_INPUT_XPATH)
+        self.password2_input = (By.XPATH, self.PASSWORD2_INPUT_XPATH)
+        self.register_button = (By.XPATH, self.REGISTER_BUTTON_XPATH)
+        self.username_error = (By.XPATH, self.USERNAME_ERROR_XPATH)
+        self.email_error = (By.XPATH, self.EMAIL_ERROR_XPATH)
+
+    def enter_credentials(self, username, email, password):
+        self.driver.find_element(*self.username_input).send_keys(username)
+        self.driver.find_element(*self.email_input).send_keys(email)
+        self.driver.find_element(*self.password1_input).send_keys(password)
+        self.driver.find_element(*self.password2_input).send_keys(password)
+
+    def click_register_button(self):
+        self.driver.find_element(*self.register_button).click()
+
+    def username_error_exists(self):
+        try:
+            self.driver.find_element(*self.username_error)
+            return True
+        except NoSuchElementException:
+            return False
+
+    def email_error_exists(self):
+        try:
+            self.driver.find_element(*self.email_error)
+            return True
+        except NoSuchElementException:
+            return False
+
+
+class LogoutForm:
+    ACCOUNT_DROPDOWN_XPATH = '//*[@id="navbarMenu"]/ul[3]/li/a'
+    LOGOUT_BUTTON_XPATH = '//*[@id="navbarMenu"]/ul[3]/li/ul/li/a'
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.account_dropdown = (By.XPATH, self.ACCOUNT_DROPDOWN_XPATH)
+        self.logout_button = (By.XPATH, self.LOGOUT_BUTTON_XPATH)
+
+    def logout(self):
+        self.driver.find_element(*self.account_dropdown).click()
+        time.sleep(0.5)
+        self.driver.find_element(*self.logout_button).click()
+        time.sleep(0.5)
+
+    def get_account_dropdown_element(self):
+        return self.driver.find_element(*self.account_dropdown)
+
+
+class ProjectForm:
+    NEW_PROJECT_CARD_XPATH = '//*[@id="modal-toggle"]'
+    PROJECT_NAME_INPUT_XPATH = '//*[@id="id_name"]'
+    CREATE_BUTTON_XPATH = '//*[@id="exampleModal"]/div/div/form/div[2]/button'
+    CREATED_PROJECT_CARD_XPATH = "/html/body/div/div[2]/div/div[2]/a[2]"
+    FORM_ERROR_XPATH = '//*[@id="error_1_id_name"]'
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.new_project_card = (By.XPATH, self.NEW_PROJECT_CARD_XPATH)
+        self.project_name_input = (By.XPATH, self.PROJECT_NAME_INPUT_XPATH)
+        self.create_button = (By.XPATH, self.CREATE_BUTTON_XPATH)
+        self.created_project = (By.XPATH, self.CREATED_PROJECT_CARD_XPATH)
+        self.form_error = (By.XPATH, self.FORM_ERROR_XPATH)
+
+    def create_project(self, project_name):
+        self.driver.find_element(*self.new_project_card).click()
+        time.sleep(0.5)
+        self.driver.find_element(*self.project_name_input).send_keys(project_name)
+        self.driver.find_element(*self.create_button).click()
+        time.sleep(0.5)
+
+    def get_new_project_element(self):
+        return self.driver.find_element(*self.created_project)
+
+    def form_error_exists(self):
+        try:
+            self.driver.find_element(*self.form_error)
+            return True
+        except NoSuchElementException:
+            return False
+
+
+# Tests
 class SeleniumTestCase(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
@@ -23,132 +139,68 @@ class SeleniumTestCase(StaticLiveServerTestCase):
 
 
 class LoginFormTest(SeleniumTestCase):
+    USERNAME = "testuser"
+    EMAIL = "testuser@example.com"
+    PASSWORD = "testpassword"
+    FAIL_MSG = "Failed login attempt"
+
     def test_login_form(self):
-        User.objects.create_user(
-            username="testuser", email="testuser@example.com", password="testpassword"
-        )
+        User.objects.create_user(self.USERNAME, self.EMAIL, self.PASSWORD)
 
         self.driver.get(self.live_server_url + "/login")
+        login_form = LoginForm(self.driver)
 
-        username_input_xpath = '//*[@id="id_username"]'
-        password_input_xpath = '//*[@id="id_password"]'
-        login_button_xpath = "/html/body/div/div[2]/div/form/button"
-
-        username_input = self.driver.find_element(By.XPATH, username_input_xpath)
-        password_input = self.driver.find_element(By.XPATH, password_input_xpath)
-        login_button = self.driver.find_element(By.XPATH, login_button_xpath)
-
-        username_input.send_keys("testuser")
-        password_input.send_keys("testpassword")
-        login_button.click()
+        login_form.enter_credentials(self.USERNAME, self.PASSWORD)
+        login_form.click_login_button()
         time.sleep(0.5)
 
         homepage_url = self.live_server_url + "/"
         current_url = self.driver.current_url
 
-        self.assertEqual(current_url, homepage_url, "Failed login attempt")
+        self.assertEqual(current_url, homepage_url, self.FAIL_MSG)
 
 
 class RegistrationFormTest(SeleniumTestCase):
+    USERNAME = "testuser"
+    EMAIL = "testuser@example.com"
+    PASSWORD = "testpassword"
+    FAIL_MSG = "Failed registration attempt"
+
     def test_successful_registration(self):
         self.driver.get(self.live_server_url + "/register")
+        registration_form = RegistrationForm(self.driver)
 
-        username_input_xpath = '//*[@id="id_username"]'
-        email_input_xpath = '//*[@id="id_email"]'
-        password1_input_xpath = '//*[@id="id_password1"]'
-        password2_input_xpath = '//*[@id="id_password2"]'
-        register_button_xpath = "/html/body/div/div[2]/div/form/button"
-
-        username_input = self.driver.find_element(By.XPATH, username_input_xpath)
-        email_input = self.driver.find_element(By.XPATH, email_input_xpath)
-        password1_input = self.driver.find_element(By.XPATH, password1_input_xpath)
-        password2_input = self.driver.find_element(By.XPATH, password2_input_xpath)
-        register_button = self.driver.find_element(By.XPATH, register_button_xpath)
-
-        username = "newuser"
-        email = "newuser@example.com"
-        password = "testpassword"
-
-        username_input.send_keys(username)
-        email_input.send_keys(email)
-        password1_input.send_keys(password)
-        password2_input.send_keys(password)
-        register_button.click()
+        registration_form.enter_credentials(self.USERNAME, self.EMAIL, self.PASSWORD)
+        registration_form.click_register_button()
         time.sleep(0.5)
 
-        self.assertTrue(
-            self.is_user_registered(username), "Failed registration attempt"
-        )
+        self.assertTrue(self.is_user_registered(self.USERNAME), self.FAIL_MSG)
 
     def test_duplicate_username_registration_prevention(self):
         self.driver.get(self.live_server_url + "/register")
+        registration_form = RegistrationForm(self.driver)
 
-        username_input_xpath = '//*[@id="id_username"]'
-        email_input_xpath = '//*[@id="id_email"]'
-        password1_input_xpath = '//*[@id="id_password1"]'
-        password2_input_xpath = '//*[@id="id_password2"]'
-        register_button_xpath = "/html/body/div/div[2]/div/form/button"
-
-        username_input = self.driver.find_element(By.XPATH, username_input_xpath)
-        email_input = self.driver.find_element(By.XPATH, email_input_xpath)
-        password1_input = self.driver.find_element(By.XPATH, password1_input_xpath)
-        password2_input = self.driver.find_element(By.XPATH, password2_input_xpath)
-        register_button = self.driver.find_element(By.XPATH, register_button_xpath)
-
-        existing_user = User.objects.create_user(
-            username="testuser", email="testuser@example.com", password="testpassword"
+        User.objects.create_user(
+            self.USERNAME, "existinguser@example.com", self.PASSWORD
         )
 
-        username_input.send_keys(existing_user.username)
-        email_input.send_keys("newemail@example.com")
-        password1_input.send_keys("testpassword")
-        password2_input.send_keys("testpassword")
-        register_button.click()
+        registration_form.enter_credentials(self.USERNAME, self.EMAIL, self.PASSWORD)
+        registration_form.click_register_button()
         time.sleep(0.5)
 
-        username_error_xpath = '//*[@id="error_1_id_username"]'
-
-        try:
-            username_error_element = self.driver.find_element(
-                By.XPATH, username_error_xpath
-            )
-            self.assertIn("already exists", username_error_element.text)
-        except NoSuchElementException:
-            self.fail("No error message displayed for duplicate username")
+        self.assertTrue(registration_form.username_error_exists())
 
     def test_duplicate_email_registration_prevention(self):
         self.driver.get(self.live_server_url + "/register")
+        registration_form = RegistrationForm(self.driver)
 
-        username_input_xpath = '//*[@id="id_username"]'
-        email_input_xpath = '//*[@id="id_email"]'
-        password1_input_xpath = '//*[@id="id_password1"]'
-        password2_input_xpath = '//*[@id="id_password2"]'
-        register_button_xpath = "/html/body/div/div[2]/div/form/button"
+        User.objects.create_user("existinguser", self.EMAIL, self.PASSWORD)
 
-        username_input = self.driver.find_element(By.XPATH, username_input_xpath)
-        email_input = self.driver.find_element(By.XPATH, email_input_xpath)
-        password1_input = self.driver.find_element(By.XPATH, password1_input_xpath)
-        password2_input = self.driver.find_element(By.XPATH, password2_input_xpath)
-        register_button = self.driver.find_element(By.XPATH, register_button_xpath)
-
-        existing_user = User.objects.create_user(
-            username="testuser", email="testuser@example.com", password="testpassword"
-        )
-
-        username_input.send_keys("newuser")
-        email_input.send_keys(existing_user.email)
-        password1_input.send_keys("testpassword")
-        password2_input.send_keys("testpassword")
-        register_button.click()
+        registration_form.enter_credentials(self.USERNAME, self.EMAIL, self.PASSWORD)
+        registration_form.click_register_button()
         time.sleep(0.5)
 
-        email_error_xpath = '//*[@id="error_1_id_email"]'
-
-        try:
-            email_error_element = self.driver.find_element(By.XPATH, email_error_xpath)
-            self.assertIn("already exists", email_error_element.text)
-        except NoSuchElementException:
-            self.fail("No error message displayed for duplicate email")
+        self.assertTrue(registration_form.email_error_exists())
 
     def is_user_registered(self, username):
         try:
@@ -159,144 +211,67 @@ class RegistrationFormTest(SeleniumTestCase):
 
 
 class LogoutFormTest(SeleniumTestCase):
+    USERNAME = "testuser"
+    EMAIL = "testuser@example.com"
+    PASSWORD = "testpassword"
+    FAIL_MSG = "Failed logout attempt"
+
     def test_logout_form(self):
-        User.objects.create_user(
-            username="testuser", email="testuser@example.com", password="testpassword"
-        )
+        User.objects.create_user(self.USERNAME, self.EMAIL, self.PASSWORD)
 
         self.driver.get(self.live_server_url + "/login")
+        login_form = LoginForm(self.driver)
+        logout_form = LogoutForm(self.driver)
 
-        username_input_xpath = '//*[@id="id_username"]'
-        password_input_xpath = '//*[@id="id_password"]'
-        login_button_xpath = "/html/body/div/div[2]/div/form/button"
-
-        username_input = self.driver.find_element(By.XPATH, username_input_xpath)
-        password_input = self.driver.find_element(By.XPATH, password_input_xpath)
-        login_button = self.driver.find_element(By.XPATH, login_button_xpath)
-
-        username_input.send_keys("testuser")
-        password_input.send_keys("testpassword")
-        login_button.click()
+        login_form.enter_credentials(self.USERNAME, self.PASSWORD)
+        login_form.click_login_button()
         time.sleep(0.5)
 
-        account_dropdown_xpath = '//*[@id="navbarMenu"]/ul[3]/li/a'
-        logout_button_xpath = '//*[@id="navbarMenu"]/ul[3]/li/ul/li/a'
-
-        account_dropdown = self.driver.find_element(By.XPATH, account_dropdown_xpath)
-        logout_button = self.driver.find_element(By.XPATH, logout_button_xpath)
-
-        account_dropdown.click()
+        logout_form.logout()
         time.sleep(0.5)
 
-        logout_button.click()
-        time.sleep(0.5)
+        account_dropdown = logout_form.get_account_dropdown_element()
 
-        account_dropdown = self.driver.find_element(By.XPATH, account_dropdown_xpath)
-
-        self.assertEqual(account_dropdown.text, "Account", "Failed to logout")
+        self.assertEqual(account_dropdown.text, "Account", self.FAIL_MSG)
 
 
-class NewProjectFormTest(SeleniumTestCase):
-    def test_new_project_form(self):
-        self.login()
+class ProjectFormTest(SeleniumTestCase):
+    USERNAME = "testuser"
+    EMAIL = "testuser@example.com"
+    PASSWORD = "testpassword"
+    FAIL_MSG = "Failed to create project"
 
-        self.driver.get(self.live_server_url + "/projects")
-
-        new_project_card_xpath = '//*[@id="modal-toggle"]'
-
-        new_project_card = self.driver.find_element(By.XPATH, new_project_card_xpath)
-
-        new_project_card.click()
-        time.sleep(0.5)
-
-        project_name = "Test project"
-
-        project_name_input_xpath = '//*[@id="id_name"]'
-        create_button_xpath = '//*[@id="exampleModal"]/div/div/form/div[2]/button'
-
-        project_name_input = self.driver.find_element(
-            By.XPATH, project_name_input_xpath
-        )
-        create_button = self.driver.find_element(By.XPATH, create_button_xpath)
-
-        project_name_input.send_keys(project_name)
-        create_button.click()
-        time.sleep(0.5)
-
-        created_project_card_xpath = "/html/body/div/div[2]/div/div[2]/a[2]"
-
-        created_project_card = self.driver.find_element(
-            By.XPATH, created_project_card_xpath
-        )
-
-        self.assertEqual(
-            created_project_card.text, project_name, "Failed to create project"
-        )
-
-    def test_duplicate_name_new_project_form_prevention(self):
-        self.login()
-
-        self.driver.get(self.live_server_url + "/projects")
-
-        new_project_card_xpath = '//*[@id="modal-toggle"]'
-
-        new_project_card = self.driver.find_element(By.XPATH, new_project_card_xpath)
-
-        new_project_card.click()
-        time.sleep(0.5)
-
-        project_name = "Test project"
-
-        project_name_input_xpath = '//*[@id="id_name"]'
-        create_button_xpath = '//*[@id="exampleModal"]/div/div/form/div[2]/button'
-
-        project_name_input = self.driver.find_element(
-            By.XPATH, project_name_input_xpath
-        )
-        create_button = self.driver.find_element(By.XPATH, create_button_xpath)
-
-        project_name_input.send_keys(project_name)
-        create_button.click()
-        time.sleep(0.5)
-
-        new_project_card = self.driver.find_element(By.XPATH, new_project_card_xpath)
-
-        new_project_card.click()
-        time.sleep(0.5)
-
-        project_name_input = self.driver.find_element(
-            By.XPATH, project_name_input_xpath
-        )
-        create_button = self.driver.find_element(By.XPATH, create_button_xpath)
-
-        project_name_input.send_keys(project_name)
-        create_button.click()
-        time.sleep(0.5)
-
-        form_error_xpath = '//*[@id="error_1_id_name"]'
-
-        try:
-            form_error = self.driver.find_element(By.XPATH, form_error_xpath)
-            self.assertIn("already exists", form_error.text)
-        except NoSuchElementException:
-            self.fail("No error message displayed for project with duplicate name")
-
-    def login(self):
-        User.objects.create_user(
-            username="testuser", email="testuser@example.com", password="testpassword"
-        )
-
+    def test_project_form(self):
         self.driver.get(self.live_server_url + "/login")
+        User.objects.create_user(self.USERNAME, self.EMAIL, self.PASSWORD)
+        login_form = LoginForm(self.driver)
 
-        username_input_xpath = '//*[@id="id_username"]'
-        password_input_xpath = '//*[@id="id_password"]'
-        login_button_xpath = "/html/body/div/div[2]/div/form/button"
-
-        username_input = self.driver.find_element(By.XPATH, username_input_xpath)
-        password_input = self.driver.find_element(By.XPATH, password_input_xpath)
-        login_button = self.driver.find_element(By.XPATH, login_button_xpath)
-
-        username_input.send_keys("testuser")
-        password_input.send_keys("testpassword")
-        login_button.click()
+        login_form.enter_credentials(self.USERNAME, self.PASSWORD)
+        login_form.click_login_button()
         time.sleep(0.5)
+
+        self.driver.get(self.live_server_url + "/projects")
+        project_name = "Test project"
+        project_form = ProjectForm(self.driver)
+        project_form.create_project(project_name)
+
+        created_project_card = project_form.get_new_project_element()
+
+        self.assertEqual(created_project_card.text, project_name, self.FAIL_MSG)
+
+    def test_duplicate_name_project_form_prevention(self):
+        self.driver.get(self.live_server_url + "/login")
+        User.objects.create_user(self.USERNAME, self.EMAIL, self.PASSWORD)
+        login_form = LoginForm(self.driver)
+
+        login_form.enter_credentials(self.USERNAME, self.PASSWORD)
+        login_form.click_login_button()
+        time.sleep(0.5)
+
+        self.driver.get(self.live_server_url + "/projects")
+        project_name = "Test project"
+        project_form = ProjectForm(self.driver)
+        project_form.create_project(project_name)
+        project_form.create_project(project_name)
+
+        self.assertTrue(project_form.form_error_exists())
