@@ -70,5 +70,9 @@ python manage.py runserver
 Run tests using the following command:
 
 ```bash
-python manage.py test
+pytest .\app\tests.py --html=reports/pytest-report.html
+coverage run -m pytest .\app\tests.py
+coverage html -d reports\coverage
 ```
+
+Reports can be found in reports directory inside the project folder.
